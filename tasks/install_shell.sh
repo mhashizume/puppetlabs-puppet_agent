@@ -582,98 +582,129 @@ install_file() {
 info "Downloading Puppet $version for ${platform}..."
 case $platform in
   "SLES")
-    info "SLES platform! Lets get you an RPM..."
-    
-    if [[ $PT__noop != true ]]; then
-      for key in "puppet" "puppet-20250406"; do
-        gpg_key="${tmp_dir}/RPM-GPG-KEY-${key}"
-        do_download "https://yum.puppet.com/RPM-GPG-KEY-${key}" "$gpg_key"
-        rpm --import "$gpg_key"
-        rm -f "$gpg_key"
-      done
-    fi
+    info "SLES platform! Let's get you an RPM..."
+    if [[ -n $absolute_source ]]; then
+      download_url=$absolute_source
+    else
+      if [[ $PT__noop != true ]]; then
+        for key in "puppet" "puppet-20250406"; do
+          gpg_key="${tmp_dir}/RPM-GPG-KEY-${key}"
+          do_download "https://yum.puppet.com/RPM-GPG-KEY-${key}" "$gpg_key"
+          rpm --import "$gpg_key"
+          rm -f "$gpg_key"
+        done
+      fi
 
-    filetype="noarch.rpm"
-    filename="${collection}-release-sles-${platform_version}.noarch.rpm"
-    download_url="${yum_source}/${filename}"
+      filetype="noarch.rpm"
+      filename="${collection}-release-sles-${platform_version}.noarch.rpm"
+      download_url="${yum_source}/${filename}"
+    fi
     ;;
   "el")
-    info "Red hat like platform! Lets get you an RPM..."
-    filetype="rpm"
-    filename="${collection}-release-el-${platform_version}.noarch.rpm"
-    download_url="${yum_source}/${filename}"
+    info "Red Hat-like platform! Let's get you an RPM..."
+    if [[ -n $absolute_source ]]; then
+      download_url=$absolute_source
+    else
+      filetype="rpm"
+      filename="${collection}-release-el-${platform_version}.noarch.rpm"
+      download_url="${yum_source}/${filename}"
+    fi
     ;;
   "Amzn"|"Amazon Linux")
-    info "Amazon platform! Lets get you an RPM..."
-    filetype="rpm"
-    filename="${collection}-release-el-${platform_version}.noarch.rpm"
-    download_url="${yum_source}/${filename}"
+    info "Amazon platform! Let's get you an RPM..."
+    if [[ -n $absolute_source ]]; then
+      download_url=$absolute_source
+    else
+      filetype="rpm"
+      filename="${collection}-release-el-${platform_version}.noarch.rpm"
+      download_url="${yum_source}/${filename}"
+    fi
     ;;
   "Fedora")
-    info "Fedora platform! Lets get the RPM..."
-    filetype="rpm"
-    filename="${collection}-release-fedora-${platform_version}.noarch.rpm"
-    download_url="${yum_source}/${filename}"
+    info "Fedora platform! Let's get the RPM..."
+    if [[ -n $absolute_source ]]; then
+      download_url=$absolute_source
+    else
+      filetype="rpm"
+      filename="${collection}-release-fedora-${platform_version}.noarch.rpm"
+      download_url="${yum_source}/${filename}"
+    fi
     ;;
   "Debian")
-    info "Debian platform! Lets get you a DEB..."
-    case $major_version in
-      "5") deb_codename="lenny";;
-      "6") deb_codename="squeeze";;
-      "7") deb_codename="wheezy";;
-      "8") deb_codename="jessie";;
-      "9") deb_codename="stretch";;
-      "10") deb_codename="buster";;
-      "11") deb_codename="bullseye";;
-    esac
-    filetype="deb"
-    filename="${collection}-release-${deb_codename}.deb"
-    download_url="${apt_source}/${filename}"
+    info "Debian platform! Let's get you a DEB..."
+    if [[ -n $absolute_source ]]; then
+      download_url=$absolute_source
+    else
+      case $major_version in
+        "5") deb_codename="lenny";;
+        "6") deb_codename="squeeze";;
+        "7") deb_codename="wheezy";;
+        "8") deb_codename="jessie";;
+        "9") deb_codename="stretch";;
+        "10") deb_codename="buster";;
+        "11") deb_codename="bullseye";;
+      esac
+      filetype="deb"
+      filename="${collection}-release-${deb_codename}.deb"
+      download_url="${apt_source}/${filename}"
+    fi
     ;;
   "Linuxmint"|"LinuxMint")
-    info "Mint platform! Lets get you a DEB..."
-    case $major_version in
-      "3")  deb_codename="stretch";;
-      "4")  deb_codename="buster";;
-      "20") deb_codename="focal";;
-      "19") deb_codename="bionic";;
-      "18") deb_codename="xenial";;
-      "17") deb_codename="trusty";;
-    esac
-    filetype="deb"
-    filename="${collection}-release-${deb_codename}.deb"
-    download_url="${apt_source}/${filename}"
+    info "Mint platform! Let's get you a DEB..."
+    if [[ -n $absolute_source ]]; then
+      download_url=$absolute_source
+    else
+      case $major_version in
+        "3")  deb_codename="stretch";;
+        "4")  deb_codename="buster";;
+        "20") deb_codename="focal";;
+        "19") deb_codename="bionic";;
+        "18") deb_codename="xenial";;
+        "17") deb_codename="trusty";;
+      esac
+      filetype="deb"
+      filename="${collection}-release-${deb_codename}.deb"
+      download_url="${apt_source}/${filename}"
+    fi
     ;;
   "Ubuntu")
-    info "Ubuntu platform! Lets get you a DEB..."
-    case $platform_version in
-      "12.04") deb_codename="precise";;
-      "12.10") deb_codename="quantal";;
-      "13.04") deb_codename="raring";;
-      "13.10") deb_codename="saucy";;
-      "14.04") deb_codename="trusty";;
-      "14.10") deb_codename="trusty";;
-      "15.04") deb_codename="vivid";;
-      "15.10") deb_codename="wily";;
-      "16.04") deb_codename="xenial";;
-      "16.10") deb_codename="yakkety";;
-      "17.04") deb_codename="zesty";;
-      "18.04") deb_codename="bionic";;
-      "20.04") deb_codename="focal";;
-    esac
-    filetype="deb"
-    filename="${collection}-release-${deb_codename}.deb"
-    download_url="${apt_source}/${filename}"
+    info "Ubuntu platform! Let's get you a DEB..."
+    if [[ -n $absolute_source ]]; then
+      download_url=$absolute_source
+    else
+      case $platform_version in
+        "12.04") deb_codename="precise";;
+        "12.10") deb_codename="quantal";;
+        "13.04") deb_codename="raring";;
+        "13.10") deb_codename="saucy";;
+        "14.04") deb_codename="trusty";;
+        "14.10") deb_codename="trusty";;
+        "15.04") deb_codename="vivid";;
+        "15.10") deb_codename="wily";;
+        "16.04") deb_codename="xenial";;
+        "16.10") deb_codename="yakkety";;
+        "17.04") deb_codename="zesty";;
+        "18.04") deb_codename="bionic";;
+        "20.04") deb_codename="focal";;
+      esac
+      filetype="deb"
+      filename="${collection}-release-${deb_codename}.deb"
+      download_url="${apt_source}/${filename}"
+    fi
     ;;
   "mac_os_x")
-    info "OSX platform! Lets get you a DMG..."
+    info "macOS platform! Let's get you a DMG..."
     filetype="dmg"
-    if test "$version" = "latest"; then
+    if [[ -n $absolute_source ]]; then
+      download_url=$absolute_source
+    elif test "$version" = "latest"; then
       filename="puppet-agent-latest.dmg"
     else
       filename="puppet-agent-${version}-1.osx${platform_version}.dmg"
     fi
-    download_url="${mac_source}/mac/${collection}/${platform_version}/x86_64/${filename}"
+    if [[ -z $download_url ]]; then
+      download_url="${mac_source}/mac/${collection}/${platform_version}/x86_64/${filename}"
+    fi
     ;;
   *)
     critical "Sorry $platform is not supported yet!"

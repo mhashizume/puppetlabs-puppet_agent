@@ -11,6 +11,10 @@
       "description": "The Puppet collection to install from (defaults to puppet, which maps to the latest collection released)",
       "type": "Optional[Enum[puppet6, puppet7, puppet, puppet6-nightly, puppet7-nightly, puppet-nightly]]"
     },
+    "absolute_source": {
+      "description": "The absolute source path to find a package. No path structure or package name is assumed; the fully qualified path to the package itself must be provided.",
+      "type": "Optional[String]"
+    },
     "yum_source": {
       "description": "The source location to find yum repos (defaults to yum.puppet.com)",
       "type": "Optional[String]"
