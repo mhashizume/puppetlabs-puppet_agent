@@ -18,19 +18,16 @@ class puppet_agent::osfamily::redhat {
         $platform_and_version = "fedora/${facts['os']['release']['major']}"
       }
       'Amazon': {
-        $major_version = $facts['os']['release']['major']
-        if ("${major_version}" == '2') {
-          $amz_el_version = '7'
-        }
-        else {
-          $amz_el_version = '6'
+        $amz_el_version = $facts['os']['release']['major'] ? {
+          '2'         => '7',
+          /^20\d\d\$/ => "${facts['os']['release']['major']}",
+          default     => '6',
         }
 
-        if ("${amz_el_version}" =~ /^(\A6\z|\A7\z)/) {
-          $platform_and_version = "el/${amz_el_version}"
-        }
-        else {
-          $platform_and_version = "amazon/${major_version}"
+        $platform_and_version = $facts['os']['release']['major'] ? {
+          '2'         => "el/${amz_el_version}",
+          /^20\d\d\$/ => "amazon/${amz_el_version}",
+          default     => "el/${amz_el_version}",
         }
       }
       default: {

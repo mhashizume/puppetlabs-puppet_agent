@@ -49,6 +49,7 @@ node default {
     agents_only.each do |agent|
       on(agent, puppet('agent -t --debug'), acceptable_exit_codes: 2)
       wait_for_installation_pid(agent)
+      on(agent, 'cat /etc/yum.repos.d/pc_repo')
       assert(puppet_agent_version_on(agent) =~ %r{^8\.\d+\.\d+.*})
     end
   end
