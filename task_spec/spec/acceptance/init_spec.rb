@@ -110,10 +110,10 @@ describe 'install task' do
 
     # extra request is needed on windows hosts
     # this will fail with "execution expired"
-    run_task('puppet_agent::version', 'target', {}) if target_platform.include?('win')
+    run_task('puppet_agent::version', 'target', {}, log_level = :trace) if target_platform.include?('win')
 
     # Test the agent isn't already installed and that the version task works
-    results = run_task('puppet_agent::version', 'target', {})
+    results = run_task('puppet_agent::version', 'target', {}, log_level = :trace)
     results.each do |res|
       expect(res).to include('status' => 'success')
       expect(res['value']['version']).to eq(nil)
