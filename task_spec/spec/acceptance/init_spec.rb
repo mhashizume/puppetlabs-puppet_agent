@@ -21,6 +21,7 @@ describe 'install task' do
     host_data['targets'].each do |node_data|
       node_data['config']['winrm']['connect-timeout'] = 120 if target_platform.include?('win')
     end
+    logger.info("host_data is #{host_data}}")
 
     host_data
   end
