@@ -1,7 +1,5 @@
 #!/bin/sh
 
-set -e
-
 loc=/opt/puppetlabs/puppet/VERSION
 if test -f $loc; then
   echo "{\"version\":\"$(cat $loc)\",\"source\":\"${loc}\"}"
