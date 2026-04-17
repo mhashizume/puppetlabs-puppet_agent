@@ -10,5 +10,5 @@ on:
 
 jobs:
   static_code_analysis:
-    uses: "puppetlabs/phoenix-github-actions/.github/workflows/static_code_analysis.yaml@main"
+    uses: "puppetlabs/phoenix-github-actions/.github/workflows/static_code_analysis.yaml@c9140145a22b0d21694c55600745eeaecd970d5f"
     secrets: inherit
